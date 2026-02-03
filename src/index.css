@@ -1,0 +1,864 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+ * KIOSK TV DISPLAY - Design System
+ * Otimizado para TVs 1920x1080 em modo fullscreen
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap');
+
+@layer base {
+  :root {
+    /* Cores principais - tema escuro para TV */
+    --background: 220 20% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 18% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 18% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Vermelho racing como cor primária */
+    --primary: 0 85% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Cinza escuro para elementos secundários */
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 220 12% 22%;
+    --muted-foreground: 220 10% 60%;
+
+    /* Amarelo para acentos (bandeira de corrida) */
+    --accent: 45 100% 55%;
+    --accent-foreground: 220 20% 8%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 18%;
+    --ring: 0 85% 50%;
+
+    --radius: 0.75rem;
+
+    /* Cores específicas do kiosk */
+    --kiosk-overlay: 220 20% 4%;
+    --kiosk-glow: 0 85% 50%;
+    --kiosk-success: 142 76% 45%;
+
+    /* Sidebar - mantido para compatibilidade */
+    --sidebar-background: 220 18% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 0 85% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 0 85% 50%;
+  }
+
+  .dark {
+    --background: 220 20% 6%;
+    --foreground: 0 0% 98%;
+    --card: 220 18% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 85% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 12% 22%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 45 100% 55%;
+    --accent-foreground: 220 20% 8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 15% 20%;
+    --input: 220 15% 18%;
+    --ring: 0 85% 50%;
+    --sidebar-background: 220 18% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 0 85% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 0 85% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Esconder cursor */
+  .hide-cursor {
+    cursor: none !important;
+  }
+  .hide-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ========================================
+   TELA TV - Estilos de apresentação
+   ======================================== */
+
+@layer components {
+  .tv-container {
+    @apply w-screen h-screen overflow-hidden;
+    background: hsl(var(--background));
+  }
+
+  .tv-content {
+    @apply w-full h-full;
+  }
+
+  .tv-iframe {
+    @apply w-full h-full border-0;
+  }
+
+  /* Fallback quando iframe é bloqueado */
+  .tv-fallback {
+    @apply w-full h-full flex flex-col items-center justify-center text-center p-8;
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 20% 8%) 100%);
+  }
+
+  .tv-fallback-icon {
+    @apply text-9xl mb-8;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .tv-fallback-title {
+    @apply text-5xl font-bold mb-4;
+    font-family: 'Orbitron', sans-serif;
+    color: hsl(var(--foreground));
+  }
+
+  .tv-fallback-text {
+    @apply text-xl mb-6;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .tv-fallback-url {
+    @apply text-sm px-6 py-3 rounded-lg;
+    background: hsl(var(--secondary));
+    color: hsl(var(--muted-foreground));
+    font-family: monospace;
+  }
+
+  /* Slideshow de patrocinadores */
+  .tv-sponsors {
+    @apply w-full h-full relative;
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(220 20% 4%) 50%, hsl(var(--background)) 100%);
+  }
+
+  .tv-sponsor-slide {
+    @apply absolute inset-0 flex flex-col items-center justify-center p-16;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .tv-sponsor-slide.active {
+    @apply opacity-100;
+  }
+
+  .tv-sponsor-slide.inactive {
+    @apply opacity-0 pointer-events-none;
+  }
+
+  .tv-sponsor-logo {
+    @apply max-w-4xl max-h-96 object-contain rounded-2xl;
+    filter: drop-shadow(0 20px 40px hsl(var(--primary) / 0.3));
+  }
+
+  .tv-sponsor-name {
+    @apply mt-8 text-5xl font-bold tracking-wider uppercase;
+    font-family: 'Orbitron', sans-serif;
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+  }
+}
+
+/* ========================================
+   TELA CONTROLE - Interface do operador
+   ======================================== */
+
+@layer components {
+  .control-container {
+    @apply min-h-screen flex flex-col;
+    background: hsl(var(--background));
+  }
+
+  .control-header {
+    @apply sticky top-0 z-50 border-b;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .control-header-content {
+    @apply max-w-2xl mx-auto px-4 py-4 flex items-center justify-between;
+  }
+
+  .control-title {
+    @apply flex items-center gap-2 text-xl font-bold;
+    font-family: 'Orbitron', sans-serif;
+    color: hsl(var(--foreground));
+  }
+
+  .control-status {
+    @apply text-sm;
+  }
+
+  .status-connected {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-full;
+    background: hsl(var(--kiosk-success) / 0.2);
+    color: hsl(142 76% 55%);
+  }
+
+  .status-disconnected {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-full;
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .control-main {
+    @apply flex-1 max-w-2xl mx-auto w-full px-4 py-6 space-y-6;
+  }
+
+  .control-section {
+    @apply p-4 rounded-xl;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .section-title {
+    @apply text-sm font-semibold uppercase tracking-wider mb-4;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Estado atual */
+  .current-mode {
+    @apply flex gap-4;
+  }
+
+  .mode-card {
+    @apply flex-1 flex flex-col items-center gap-2 p-4 rounded-lg transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .mode-card.active {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(0 85% 40%) 100%);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.4);
+  }
+
+  /* Botões principais */
+  .control-buttons {
+    @apply flex flex-col gap-3;
+  }
+
+  .control-btn-main {
+    @apply flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-lg transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    border: 2px solid transparent;
+  }
+
+  .control-btn-main:hover {
+    background: hsl(var(--muted));
+  }
+
+  .control-btn-main.active {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(0 85% 40%) 100%);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.4);
+  }
+
+  .control-btn-main.sponsors.active {
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(45 100% 45%) 100%);
+    color: hsl(var(--accent-foreground));
+    box-shadow: 0 4px 20px hsl(var(--accent) / 0.4);
+  }
+
+  /* Navegação de slides */
+  .slide-navigation {
+    @apply flex items-center justify-center gap-4 mb-4;
+  }
+
+  .nav-btn {
+    @apply p-3 rounded-lg transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .nav-btn:hover {
+    background: hsl(var(--muted));
+  }
+
+  .slide-indicator {
+    @apply flex items-baseline gap-1 text-2xl font-bold;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .slide-current {
+    color: hsl(var(--primary));
+  }
+
+  .slide-separator {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .slide-total {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .slide-previews {
+    @apply grid grid-cols-2 gap-2;
+  }
+
+  .slide-preview {
+    @apply flex flex-col gap-2 p-2 rounded-lg transition-all text-left;
+    background: hsl(var(--secondary));
+    border: 2px solid transparent;
+  }
+
+  .slide-preview:hover {
+    background: hsl(var(--muted));
+  }
+
+  .slide-preview.active {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.3);
+  }
+
+  .slide-preview img {
+    @apply w-full h-20 object-cover rounded;
+  }
+
+  .slide-preview span {
+    @apply text-xs truncate;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Toggle automático */
+  .auto-toggle-btn {
+    @apply w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .auto-toggle-btn:hover {
+    background: hsl(var(--muted));
+  }
+
+  .auto-toggle-btn.active {
+    background: hsl(var(--kiosk-success) / 0.2);
+    color: hsl(142 76% 55%);
+    border: 1px solid hsl(142 76% 45%);
+  }
+
+  .toggle-status {
+    @apply ml-auto text-sm font-bold;
+  }
+
+  .auto-info {
+    @apply mt-3 text-sm;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Configurações */
+  .settings-toggle {
+    @apply w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .settings-toggle:hover {
+    background: hsl(var(--muted));
+  }
+
+  .settings-panel {
+    @apply mt-4 space-y-4;
+  }
+
+  .setting-item {
+    @apply space-y-2;
+  }
+
+  .setting-item label {
+    @apply flex items-center gap-2 text-sm;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .setting-input {
+    @apply w-full px-4 py-2 rounded-lg;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+
+  .setting-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  /* Instruções */
+  .instructions {
+    background: hsl(var(--secondary));
+  }
+
+  .instructions-list {
+    @apply space-y-2 text-sm mb-4;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .instructions-list li {
+    @apply pl-4;
+  }
+
+  .instructions-list code {
+    @apply px-2 py-0.5 rounded text-xs;
+    background: hsl(var(--card));
+    color: hsl(var(--primary));
+  }
+
+  .network-warning {
+    @apply text-xs p-3 rounded-lg;
+    background: hsl(var(--accent) / 0.1);
+    color: hsl(var(--accent));
+    border: 1px solid hsl(var(--accent) / 0.3);
+  }
+
+  /* Footer */
+  .control-footer {
+    @apply text-center py-4 text-xs;
+    color: hsl(var(--muted-foreground));
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  /* ======== MULTI-TV CONTROLS ======== */
+  
+  /* Seletor de TVs */
+  .tv-selector {
+    @apply grid grid-cols-2 gap-3;
+  }
+
+  .tv-select-btn {
+    @apply p-3 rounded-xl text-left transition-all;
+    background: hsl(var(--secondary));
+    border: 2px solid transparent;
+  }
+
+  .tv-select-btn:hover {
+    background: hsl(var(--muted));
+  }
+
+  .tv-select-btn.active {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .tv-select-header {
+    @apply flex items-center gap-2 mb-2 font-semibold;
+    color: hsl(var(--foreground));
+  }
+
+  .tv-select-status {
+    @apply flex items-center gap-2 text-sm;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Botão de corrida alternativa */
+  .control-btn-main.race2.active {
+    background: linear-gradient(135deg, hsl(200 85% 50%) 0%, hsl(200 85% 35%) 100%);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 20px hsl(200 85% 50% / 0.4);
+  }
+
+  /* Seção aplicar a todas */
+  .apply-all-section {
+    @apply mt-4 pt-4;
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .apply-all-label {
+    @apply block text-xs uppercase tracking-wider mb-3;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .apply-all-buttons {
+    @apply flex gap-2;
+  }
+
+  .apply-all-btn {
+    @apply flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all;
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .apply-all-btn:hover {
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+  }
+
+  /* Editor de URLs */
+  .url-editor {
+    @apply mb-4;
+  }
+
+  .url-label {
+    @apply flex items-center gap-2 text-sm mb-2;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .url-input-group {
+    @apply flex gap-2;
+  }
+
+  .url-input {
+    @apply flex-1 px-4 py-2.5 rounded-lg text-sm;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+
+  .url-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  .url-btn {
+    @apply px-4 py-2 rounded-lg transition-all font-medium;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .url-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  .url-btn.all {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  /* Editor de patrocinadores */
+  .sponsors-editor {
+    @apply mb-4;
+  }
+
+  .sponsors-textarea {
+    @apply w-full px-4 py-3 rounded-lg text-sm resize-y;
+    background: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    font-family: monospace;
+    min-height: 120px;
+  }
+
+  .sponsors-textarea:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  .sponsors-actions {
+    @apply flex gap-2 mt-3;
+  }
+
+  .sponsors-count {
+    @apply text-xs mt-2;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .current-sponsors {
+    @apply mt-4 pt-4;
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .sponsors-subtitle {
+    @apply text-xs uppercase tracking-wider mb-3;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .sponsors-preview-grid {
+    @apply grid grid-cols-4 gap-2;
+  }
+
+  .sponsor-preview-item {
+    @apply relative rounded-lg overflow-hidden;
+    background: hsl(var(--secondary));
+    aspect-ratio: 16/9;
+  }
+
+  .sponsor-preview-item img {
+    @apply w-full h-full object-cover;
+  }
+
+  .sponsor-preview-item span {
+    @apply absolute bottom-0 left-0 right-0 text-center text-xs py-1;
+    background: hsl(var(--card) / 0.8);
+    color: hsl(var(--foreground));
+  }
+
+  /* Toggle automático pequeno */
+  .auto-toggle-small {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all;
+    background: hsl(var(--secondary));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .auto-toggle-small.active {
+    background: hsl(var(--kiosk-success) / 0.3);
+    color: hsl(142 76% 55%);
+  }
+
+  /* Indicador de TV na tela TV */
+  .tv-id-indicator {
+    @apply fixed top-4 left-4 px-4 py-2 rounded-lg text-sm font-bold z-50;
+    font-family: 'Orbitron', sans-serif;
+    background: hsl(var(--card) / 0.9);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.5);
+    animation: fadeOutSlow 5s ease-in-out forwards;
+  }
+
+  @keyframes fadeOutSlow {
+    0%, 60% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+
+  /* Section title com ícone */
+  .section-title {
+    @apply flex items-center gap-2 text-sm font-semibold uppercase tracking-wider mb-4;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Cores verdes para conexão */
+  .text-green-500 {
+    color: hsl(142 76% 45%);
+  }
+}
+
+/* ========================================
+   ANIMAÇÕES DE TRANSIÇÃO TV
+   Duração controlada via CSS variable --animation-duration
+   ======================================== */
+
+@layer utilities {
+  /* Fallback: verifica suporte a animações */
+  @supports not (animation: none) {
+    .anim-fade-in,
+    .anim-fade-out,
+    .anim-fade-zoom-in,
+    .anim-fade-zoom-out,
+    .anim-slide-left-in,
+    .anim-slide-left-out,
+    .anim-slide-right-in,
+    .anim-slide-right-out,
+    .anim-slide-up-in,
+    .anim-slide-up-out {
+      animation: none !important;
+    }
+  }
+
+  /* ======== FADE ======== */
+  .anim-fade-in {
+    animation: kioskFadeIn var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  .anim-fade-out {
+    animation: kioskFadeOut var(--animation-duration, 500ms) ease-in forwards;
+  }
+
+  @keyframes kioskFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes kioskFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* ======== FADE + ZOOM ======== */
+  .anim-fade-zoom-in {
+    animation: kioskFadeZoomIn var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  .anim-fade-zoom-out {
+    animation: kioskFadeZoomOut var(--animation-duration, 500ms) ease-in forwards;
+  }
+
+  @keyframes kioskFadeZoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes kioskFadeZoomOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+  /* ======== SLIDE LEFT ======== */
+  .anim-slide-left-in {
+    animation: kioskSlideLeftIn var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  .anim-slide-left-out {
+    animation: kioskSlideLeftOut var(--animation-duration, 500ms) ease-in forwards;
+  }
+
+  @keyframes kioskSlideLeftIn {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes kioskSlideLeftOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+  }
+
+  /* ======== SLIDE RIGHT ======== */
+  .anim-slide-right-in {
+    animation: kioskSlideRightIn var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  .anim-slide-right-out {
+    animation: kioskSlideRightOut var(--animation-duration, 500ms) ease-in forwards;
+  }
+
+  @keyframes kioskSlideRightIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes kioskSlideRightOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+  }
+
+  /* ======== SLIDE UP ======== */
+  .anim-slide-up-in {
+    animation: kioskSlideUpIn var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  .anim-slide-up-out {
+    animation: kioskSlideUpOut var(--animation-duration, 500ms) ease-in forwards;
+  }
+
+  @keyframes kioskSlideUpIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes kioskSlideUpOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+  }
+
+  /* ======== SLIDE ENTER (para slides de patrocinadores) ======== */
+  .slide-entering {
+    animation: slideEnter var(--animation-duration, 500ms) ease-out forwards;
+  }
+
+  @keyframes slideEnter {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* ======== PULSE (indicadores) ======== */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px hsl(var(--primary) / 0.7);
+    }
+  }
+}
